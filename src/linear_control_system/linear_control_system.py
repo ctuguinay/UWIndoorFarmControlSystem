@@ -14,8 +14,8 @@ class LinearControlSystem:
             raise ValueError("Number of columns in A must match number of rows in x")
 
     def calculate_next_state(self, u):
-        if u.shape[0] != self.B.shape[0]:
-            raise ValueError("Dimensions of u and B do not match")
+        if self.B.shape[1] != u.shape[0]:
+            raise ValueError("Number of columns of B must match number of rows in u")
 
         next_x = np.dot(self.A, self.x) + np.dot(self.B, u)
         self.x = next_x
