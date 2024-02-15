@@ -42,3 +42,110 @@ def test_calculate_next_state_with_invalid_dimensions():
     u = np.array([9, 10])  # incorrect dimensions
     with pytest.raises(ValueError):
         system.calculate_next_state(u)
+
+
+# Test cases for compute_eigen
+def test_compute_A_eigen():
+    A = np.array([[-0.01, 0, 0], [-0.01, -0.05, 0], [-0.01, 0, -0.05]])
+    B = np.array(
+        [
+            [0.2, -0.2, 0.01, 0.01, 0.01],
+            [-0.01, 0.01, 0.1, -0.1, 0.05],
+            [-0.01, 0.01, 0.05, -0.05, 0.1],
+        ]
+    )
+    system = LinearControlSystem(A, B, np.zeros(A.shape[0]))
+    eigenvalues, eigenvectors = system.compute_A_eigen()
+    expected_eigenvalues = np.array([-0.05, -0.05, -0.01])
+    expected_eigenvectors = np.array(
+        [[0, 0, 0.94280904], [0, 1, -0.23570226], [1, 0, -0.23570226]]
+    )
+    assert np.allclose(eigenvalues, expected_eigenvalues)
+    assert np.allclose(eigenvectors, expected_eigenvectors)
+
+
+def test_controllability_matrix():
+    A = np.array([[-0.01, 0, 0], [-0.01, -0.05, 0], [-0.01, 0, -0.05]])
+    B = np.array(
+        [
+            [0.2, -0.2, 0.01, 0.01, 0.01],
+            [-0.01, 0.01, 0.1, -0.1, 0.05],
+            [-0.01, 0.01, 0.05, -0.05, 0.1],
+        ]
+    )
+    system = LinearControlSystem(A, B, np.zeros(A.shape[0]))
+    controllability_matrix, rank, controllable = system.compute_controllability_matrix()
+    expected_rank = 3
+    expected_controllable = True
+    expected_controllability_matrix = np.array(
+        [
+            [
+                2.00e-01,
+                -2.00e-01,
+                1.00e-02,
+                1.00e-02,
+                1.00e-02,
+                -2.00e-03,
+                2.00e-03,
+                -1.00e-04,
+                -1.00e-04,
+                -1.00e-04,
+                2.00e-05,
+                -2.00e-05,
+                1.00e-06,
+                1.00e-06,
+                1.00e-06,
+            ],
+            [
+                -1.00e-02,
+                1.00e-02,
+                1.00e-01,
+                -1.00e-01,
+                5.00e-02,
+                -1.50e-03,
+                1.50e-03,
+                -5.10e-03,
+                4.90e-03,
+                -2.60e-03,
+                9.50e-05,
+                -9.50e-05,
+                2.56e-04,
+                -2.44e-04,
+                1.31e-04,
+            ],
+            [
+                -1.00e-02,
+                1.00e-02,
+                5.00e-02,
+                -5.00e-02,
+                1.00e-01,
+                -1.50e-03,
+                1.50e-03,
+                -2.60e-03,
+                2.40e-03,
+                -5.10e-03,
+                9.50e-05,
+                -9.50e-05,
+                1.31e-04,
+                -1.19e-04,
+                2.56e-04,
+            ],
+        ]
+    )
+    assert np.allclose(rank, expected_rank)
+    assert controllable == expected_controllable
+    assert np.allclose(controllability_matrix, expected_controllability_matrix)
+
+
+def test_compute_observability_matrix():
+    A = np.array([[1, 2], [3, 4]])
+    C = np.array([[1, 0], [0, 1]])
+    system = LinearControlSystem(A, np.zeros((2, 1)), np.zeros(2))
+    system.C = C
+    observability_matrix, rank, observable = system.compute_observability_matrix()
+    expected_observability_matrix = np.array([[1, 0], [0, 1], [1, 2], [3, 4]])
+    expected_rank = 2
+    expected_observable = True
+    assert np.allclose(observability_matrix, expected_observability_matrix)
+    assert rank == expected_rank
+    assert observable == expected_observable
