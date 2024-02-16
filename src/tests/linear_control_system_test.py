@@ -135,17 +135,3 @@ def test_controllability_matrix():
     assert np.allclose(rank, expected_rank)
     assert controllable == expected_controllable
     assert np.allclose(controllability_matrix, expected_controllability_matrix)
-
-
-def test_compute_observability_matrix():
-    A = np.array([[1, 2], [3, 4]])
-    C = np.array([[1, 0], [0, 1]])
-    system = LinearControlSystem(A, np.zeros((2, 1)), np.zeros(2))
-    system.C = C
-    observability_matrix, rank, observable = system.compute_observability_matrix()
-    expected_observability_matrix = np.array([[1, 0], [0, 1], [1, 2], [3, 4]])
-    expected_rank = 2
-    expected_observable = True
-    assert np.allclose(observability_matrix, expected_observability_matrix)
-    assert rank == expected_rank
-    assert observable == expected_observable

@@ -32,18 +32,12 @@ class LinearControlSystem:
             controllability_matrix = np.hstack(
                 (controllability_matrix, np.linalg.matrix_power(self.A, i) @ self.B)
             )
-        self.C = controllability_matrix
-        rank = np.linalg.matrix_rank(self.C)
+        rank = np.linalg.matrix_rank(controllability_matrix)
         controllable = rank == n
-        return self.C, rank, controllable
+        return controllability_matrix, rank, controllable
 
+    """ DEPRECATED WILL NEED TO ENFORCE C PRIOR
     def compute_observability_matrix(self):
-        if self.C is None:
-            raise ValueError(
-                "Controllability matrix not found."
-                "Will need to call compute_controllability_matrix."
-            )
-
         n = self.A.shape[0]
         observability_matrix = self.C
         for i in range(1, n):
@@ -53,3 +47,4 @@ class LinearControlSystem:
         rank = np.linalg.matrix_rank(observability_matrix)
         observable = rank == n
         return observability_matrix, rank, observable
+    """
