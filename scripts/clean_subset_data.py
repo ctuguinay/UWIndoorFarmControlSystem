@@ -34,9 +34,15 @@ if __name__ == "__main__":
     # Replace all occurrences of "ADD WATER" with None
     df.replace("ADD WATER", None, inplace=True)
 
+    # Rename columns to lowercase with underscores
+    df.columns = df.columns.str.lower().str.replace(" ", "_")
+
+    # Modify the date column format to add 2023
+    df["date"] = df["date"] + "/2023"
+
     # Extract relevant columns for pH and EC measurements
-    pH_adjustments = df[["Type of pH Adjustment", "Amount of pH Adjustment Used"]]
-    EC_adjustments = df[["Type of EC Adjustment", "Amount of EC Adjustment Used"]]
+    pH_adjustments = df[["type_of_ph_adjustment", "amount_of_ph_adjustment_used"]]
+    EC_adjustments = df[["type_of_ec_adjustment", "amount_of_ec_adjustment_used"]]
 
     # Initialize lists to store amounts for each actuator
     pH_down_list = []
@@ -47,8 +53,8 @@ if __name__ == "__main__":
 
     # Loop through pH adjustments and append pH down and pH up amounts to lists
     for index, row in pH_adjustments.iterrows():
-        adjustment_type = row["Type of pH Adjustment"]
-        amount = row["Amount of pH Adjustment Used"]
+        adjustment_type = row["type_of_ph_adjustment"]
+        amount = row["amount_of_ph_adjustment_used"]
         if isinstance(amount, str):
             amount = float(amount.lower().rstrip("ml").rstrip())
         if adjustment_type == "pH Down":
@@ -63,7 +69,7 @@ if __name__ == "__main__":
 
     # Loop through EC adjustments and append nutrient and water amounts to lists
     for index, row in EC_adjustments.iterrows():
-        adjustment_types = row["Type of EC Adjustment"]
+        adjustment_types = row["type_of_ec_adjustment"]
         if not pd.isna(adjustment_types):
             adjustment_types = adjustment_types.replace(", No Water", "")
             if "," in adjustment_types:
@@ -72,7 +78,7 @@ if __name__ == "__main__":
                 adjustment_types = [adjustment_types.lower()]
         else:
             adjustment_types = [adjustment_types]
-        amounts = [row["Amount of EC Adjustment Used"]] * len(adjustment_types)
+        amounts = [row["amount_of_ec_adjustment_used"]] * len(adjustment_types)
         count = 0
         for adjustment_type, amount in zip(adjustment_types, amounts):
             if isinstance(amount, str):
@@ -111,20 +117,26 @@ if __name__ == "__main__":
 
     calculated_data_df = pd.DataFrame(
         {
-            "pH Down (mL)": pH_down_list,
-            "pH Up (mL)": pH_up_list,
-            "Nutrient Mature (gallons)": nutrient_mature_list,
-            "Nutrient Immature (gallons)": nutrient_immature_list,
-            "Water (gallons)": water_list,
+            "pH_down_mL": pH_down_list,
+            "pH_up_mL": pH_up_list,
+            "nutrient_mature_gallons": nutrient_mature_list,
+            "nutrient_immature_gallons": nutrient_immature_list,
+            "water_gallons": water_list,
         }
     )
 
     # Concatenate the original DataFrame and the new DataFrame
     result_df = pd.concat([df, calculated_data_df], axis=1)
 
-    # Remove the 'Comments' column from the DataFrame
+    # Remove unnecessary system realization columns from the DataFrame
     result_df.drop(
-        columns=["Comments", "Type of pH Adjustment", "Type of EC Adjustment"],
+        columns=[
+            "comments",
+            "type_of_ph_adjustment",
+            "type_of_ec_adjustment",
+            "amount_of_ec_adjustment_used",
+            "amount_of_ph_adjustment_used",
+        ],
         inplace=True,
     )
 
