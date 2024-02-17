@@ -127,6 +127,9 @@ if __name__ == "__main__":
         }
     )
 
+    # Replace None values with 0
+    calculated_data_df.fillna(0, inplace=True)
+
     # Concatenate the original DataFrame and the new DataFrame
     result_df = pd.concat([df, calculated_data_df], axis=1)
 
@@ -142,9 +145,13 @@ if __name__ == "__main__":
         inplace=True,
     )
 
-    # Replaced unmeasured with None
+    # Replaced unmeasured and unknown with None
     result_df.replace("unmeasured ", None, inplace=True)
     result_df.replace("unmeasured", None, inplace=True)
+    result_df.replace("unknown", None, inplace=True)
+
+    # Replace any strings that start with unm with None
+    result_df.replace("^unm.*", None, regex=True, inplace=True)
 
     # Save the concatenated DataFrame back to a CSV file
     result_df.to_csv(
