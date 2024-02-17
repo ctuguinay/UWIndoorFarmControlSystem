@@ -85,6 +85,8 @@ if __name__ == "__main__":
                     adjusted_amount = amount * fraction
                 else:
                     adjusted_amount = amount
+                if pd.isna(adjusted_amount):
+                    adjusted_amount = 0
             if pd.isna(adjustment_type):
                 nutrient_immature_list.append(0)
                 nutrient_mature_list.append(0)
