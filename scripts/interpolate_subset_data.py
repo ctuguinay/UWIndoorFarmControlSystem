@@ -2,7 +2,9 @@ import pandas as pd
 
 if __name__ == "__main__":
     # Load the CSV file into a pandas DataFrame
-    df = pd.read_csv("data/win23_subset_zip_grow_tower_side_b_cleaned.csv")
+    df = pd.read_csv(
+        "data/daily_system_data/win23_subset_zip_grow_tower_side_b_cleaned.csv"
+    )
 
     # Convert 'date' column to datetime if it's not already
     df["date"] = pd.to_datetime(df["date"])
@@ -25,5 +27,6 @@ if __name__ == "__main__":
 
     # Save the DataFrame with interpolated values to a new CSV file
     df.to_csv(
-        "data/win23_subset_zip_grow_tower_side_b_cleaned_interpolated.csv", index=False
+        "data/daily_system_data/win23_subset_zip_grow_tower_side_b_cleaned_interpolated.csv",
+        index=False,
     )

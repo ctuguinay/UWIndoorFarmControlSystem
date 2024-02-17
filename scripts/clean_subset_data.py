@@ -29,7 +29,9 @@ def parse_adjustment_type(adjustment_type):
 
 if __name__ == "__main__":
     # Load the CSV file into a pandas DataFrame
-    df = pd.read_csv("data/win23_subset_zip_grow_tower_side_b_manual_mod.csv")
+    df = pd.read_csv(
+        "data/daily_system_data/win23_subset_zip_grow_tower_side_b_manual_mod.csv"
+    )
 
     # Replace all occurrences of "ADD WATER" with None
     df.replace("ADD WATER", None, inplace=True)
@@ -142,5 +144,7 @@ if __name__ == "__main__":
 
     # Save the concatenated DataFrame back to a CSV file
     result_df.to_csv(
-        "data/win23_subset_zip_grow_tower_side_b_cleaned.csv", index=False, mode="w"
+        "data/daily_system_data/win23_subset_zip_grow_tower_side_b_cleaned.csv",
+        index=False,
+        mode="w",
     )
