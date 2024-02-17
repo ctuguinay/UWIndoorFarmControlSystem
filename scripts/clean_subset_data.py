@@ -98,31 +98,16 @@ if __name__ == "__main__":
             elif adjustment_type == "water":
                 water_list.append(adjusted_amount)
 
-            # Check for list imbalances and append None to shorter lists
-            nutrient_immature_length = len(nutrient_immature_list)
-            nutrient_mature_length = len(nutrient_mature_list)
-            water_length = len(water_list)
-            max_length = max(
-                len(nutrient_immature_list), len(nutrient_mature_list), len(water_list)
-            )
-            nutrient_immature_list.extend(
-                [0] * (max_length - len(nutrient_immature_list))
-            )
-            nutrient_mature_list.extend([0] * (max_length - len(nutrient_mature_list)))
-            water_list.extend([0] * (max_length - len(water_list)))
-
-    # Create a new DataFrame for the calculated data
-    pH_down_len = len(pH_down_list)
-    pH_up_len = len(pH_up_list)
-    nutrient_mature_len = len(nutrient_mature_list)
-    nutrient_immature_len = len(nutrient_immature_list)
-    water_len = len(water_list)
-
-    print("Length of pH Down list:", pH_down_len)
-    print("Length of pH Up list:", pH_up_len)
-    print("Length of Nutrient Mature list:", nutrient_mature_len)
-    print("Length of Nutrient Immature list:", nutrient_immature_len)
-    print("Length of Water list:", water_len)
+        # Check for list imbalances and append None to shorter lists
+        nutrient_immature_length = len(nutrient_immature_list)
+        nutrient_mature_length = len(nutrient_mature_list)
+        water_length = len(water_list)
+        max_length = max(
+            len(nutrient_immature_list), len(nutrient_mature_list), len(water_list)
+        )
+        nutrient_immature_list.extend([0] * (max_length - len(nutrient_immature_list)))
+        nutrient_mature_list.extend([0] * (max_length - len(nutrient_mature_list)))
+        water_list.extend([0] * (max_length - len(water_list)))
 
     calculated_data_df = pd.DataFrame(
         {
