@@ -13,8 +13,13 @@ if __name__ == "__main__":
     # Set 'date' column as index
     df.set_index("date", inplace=True)
 
+    # Drop final nutrient solution volume
+    df.drop(
+        columns=["final_ec", "final_ph", "final_nutrient_solution_volume"], inplace=True
+    )
+
     # Plot the columns through time
-    fig, axs = plt.subplots(nrows=len(df.columns) - 2, figsize=(15, 18), sharex=True)
+    fig, axs = plt.subplots(nrows=len(df.columns), figsize=(15, 18), sharex=True)
     df.plot(subplots=True, ax=axs)
 
     # Add red lines indicating desired range for initial_ph, initial_ec,

@@ -142,6 +142,10 @@ if __name__ == "__main__":
         inplace=True,
     )
 
+    # Replaced unmeasured with None
+    result_df.replace("unmeasured ", None, inplace=True)
+    result_df.replace("unmeasured", None, inplace=True)
+
     # Save the concatenated DataFrame back to a CSV file
     result_df.to_csv(
         "data/daily_system_data/win23_subset_zip_grow_tower_side_b_cleaned.csv",
